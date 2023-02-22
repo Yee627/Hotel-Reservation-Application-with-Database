@@ -1,6 +1,5 @@
-package model;
+package main.java.model;
 
-import java.security.PublicKey;
 import java.util.Objects;
 
 public class Room {

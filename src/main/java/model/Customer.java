@@ -1,5 +1,6 @@
-package model;
+package main.java.model;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Customer {
@@ -45,7 +46,7 @@ public class Customer {
 
     private final String emailRegex = "^(.+)@(.+).com$";
 
-    private void validateEmail(String email) {
+    public void validateEmail(String email) {
         Pattern pattern = Pattern.compile(emailRegex);
         if (!pattern.matcher(email).matches()) {
             throw new IllegalArgumentException("Error, Invalid Email!");
@@ -63,5 +64,19 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer Id: " + id + "\nFirst Name: " + firstName + "\nLast Name: " + lastName + "\nEmail: " + email + "\n";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Customer other = (Customer) obj;
+        return Objects.equals(firstName, other.firstName) &&
+                Objects.equals(lastName, other.lastName) &&
+                Objects.equals(email, other.email);
     }
 }

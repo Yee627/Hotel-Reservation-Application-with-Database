@@ -1,7 +1,7 @@
-package service;
+package main.java.service;
 
-import jdbc.JDBCHelper;
-import model.Customer;
+import main.java.jdbc.JDBCHelper;
+import main.java.model.Customer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,10 +23,8 @@ public class CustomerService {
         return customerService;
     }
 
-    List<Customer> customers;
-
     //Add a customer
-    public void addCustomer(String firstName, String lastName, String email) throws SQLException {
+    public static void addCustomer(String firstName, String lastName, String email) throws SQLException {
         Customer customer = new Customer(firstName, lastName, email);
         String INSERT_SQL_QUERY = "INSERT INTO CUSTOMERS (CUSTOMER_ID, FIRST_NAME,LAST_NAME,EMAIL) VALUES(null,?,?,?)";
         Connection connection = null;
@@ -59,7 +57,7 @@ public class CustomerService {
     }
 
     //Retrieve one customer information based on customer email
-    public Customer getCustomer(String customerEmail) throws SQLException {
+    public static Customer getCustomer(String customerEmail) throws SQLException {
         String SELECT_SQL_QUERY = "SELECT CUSTOMER_ID,FIRST_NAME,LAST_NAME,EMAIL FROM CUSTOMERS WHERE EMAIL=?";
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -91,12 +89,12 @@ public class CustomerService {
     }
 
     //Retrieve all customer
-    public List<Customer> getAllCustomers() throws SQLException {
+    public static List<Customer> getAllCustomers() throws SQLException {
         String SELECT_ALL_SQL_QUERY = "SELECT CUSTOMER_ID,FIRST_NAME,LAST_NAME,EMAIL FROM CUSTOMERS";
         Connection connection = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        customers = new ArrayList<>();
+        List<Customer>  customers = new ArrayList<>();
         try {
             connection = JDBCHelper.getConnection();
             if ( connection == null )

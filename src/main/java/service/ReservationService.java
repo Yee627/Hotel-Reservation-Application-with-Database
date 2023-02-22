@@ -1,9 +1,9 @@
-package service;
+package main.java.service;
 
-import jdbc.JDBCHelper;
-import model.Customer;
-import model.Room;
-import model.Reservation;
+import main.java.jdbc.JDBCHelper;
+import main.java.model.Customer;
+import main.java.model.Room;
+import main.java.model.Reservation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +27,7 @@ public class ReservationService {
     }
 
     //Add a room
-    public void addRoom(Room room) throws SQLException {
+    public static void addRoom(Room room) throws SQLException {
         String INSERT_SQL_QUERY = "INSERT INTO ROOMS (ROOM_ID,ROOM_TYPE,PRICE) VALUES(?,?,?)";
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -63,7 +63,7 @@ public class ReservationService {
     }
 
     //Retrieve all rooms
-    public List<Room> getAllRooms() throws SQLException {
+    public static List<Room> getAllRooms() throws SQLException {
         String SELECT_ALL_SQL_QUERY = "SELECT ROOM_ID,ROOM_TYPE,PRICE FROM ROOMS";
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -97,7 +97,7 @@ public class ReservationService {
     }
 
     //Retrieve a room with room_id
-    public Room getARoom(Integer roomId) throws SQLException {
+    public static Room getARoom(Integer roomId) throws SQLException {
         String SELECT_SQL_QUERY = "SELECT * FROM ROOMS WHERE ROOM_ID = ?";
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -128,52 +128,8 @@ public class ReservationService {
         return room;
     }
 
-    //Retrieve available rooms based on check-in and check-out date
-    public List<Room> findRooms(Date checkInDate, Date checkOutDate) throws SQLException {
-        List<Room> availableRooms = new ArrayList<>();
-
-        String SELECT_SQL_QUERY = "SELECT * FROM ROOMS WHERE ROOM_ID NOT IN ( SELECT ROOM_ID FROM RESERVATIONS " +
-                "WHERE (CHECK_IN <= ? AND CHECK_OUT >= ?) OR " +
-                "(CHECK_IN >= ? AND CHECK_IN <= ?) OR " +
-                "(CHECK_OUT >= ? AND CHECK_OUT <= ?))";
-        Connection connection = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            connection = JDBCHelper.getConnection();
-            if (connection == null) {
-                System.out.println( "Error getting the connection. Please check if the DB server is running" );
-                return availableRooms;
-            }
-            stmt = connection.prepareStatement(SELECT_SQL_QUERY);
-
-            stmt.setDate(1, new java.sql.Date(checkInDate.getTime()));
-            stmt.setDate(2, new java.sql.Date(checkOutDate.getTime()));
-            stmt.setDate(3, new java.sql.Date(checkInDate.getTime()));
-            stmt.setDate(4, new java.sql.Date(checkOutDate.getTime()));
-            stmt.setDate(5, new java.sql.Date(checkInDate.getTime()));
-            stmt.setDate(6, new java.sql.Date(checkOutDate.getTime()));
-
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                Room room = new Room();
-                room.setRoomNumber(rs.getInt("ROOM_ID"));
-                room.setRoomType(rs.getString("ROOM_TYPE"));
-                room.setPrice(rs.getDouble("PRICE"));
-                availableRooms.add(room);
-            }
-        } catch (SQLException se){
-            throw se;
-        } finally {
-            JDBCHelper.closeResultSet(rs);
-            JDBCHelper.closePreparedStatement(stmt);
-            JDBCHelper.closeConnection(connection);
-        }
-        return availableRooms;
-    }
-
     //Add a reservation
-    public void reserveARoom(Customer customer, Room room, Date checkInDate, Date checkOutDate) throws SQLException {
+    public static void reserveARoom(Customer customer, Room room, Date checkInDate, Date checkOutDate) throws SQLException {
         String INSERT_SQL_QUERY = "INSERT INTO RESERVATIONS " +
                 "(RESERVATION_ID,CUSTOMER_ID,ROOM_ID,CHECK_IN,CHECK_OUT) " +
                 "VALUES(null,?,?,?,?)";
@@ -190,7 +146,7 @@ public class ReservationService {
             connection.setAutoCommit(false);
             stmt = connection.prepareStatement(INSERT_SQL_QUERY);
             stmt.setInt(1, customer.getId());
-            stmt.setInt(2,room.getRoomNumber());
+            stmt.setInt(2, room.getRoomNumber());
             stmt.setDate(3, new java.sql.Date(checkInDate.getTime()));
             stmt.setDate(4, new java.sql.Date(checkOutDate.getTime()));
 
@@ -209,7 +165,7 @@ public class ReservationService {
     }
 
     //Retrieve all reservations
-    public List<Reservation> getAllReservation() throws SQLException {
+    public static List<Reservation> getAllReservation() throws SQLException {
         String SELECT_ALL_SQL_QUERY = "SELECT RESERVATION_ID, CUSTOMERS.CUSTOMER_ID, FIRST_NAME, " +
                 "LAST_NAME, EMAIL,ROOMS.ROOM_ID, ROOM_TYPE, PRICE, CHECK_IN, CHECK_OUT From RESERVATIONS " +
                 "JOIN CUSTOMERS ON CUSTOMERS.CUSTOMER_ID = RESERVATIONS.CUSTOMER_ID " +
@@ -261,7 +217,7 @@ public class ReservationService {
     }
 
     //Retrieve reservations of one specific customer through customer email
-    public List<Reservation> getCustomerReservation(String customerEmail) throws SQLException {
+    public static List<Reservation> getCustomerReservation(String customerEmail) throws SQLException {
         List<Reservation> reservationsAccordingToCustomerEmail = new ArrayList<>();
         String SELECT_SQL_QUERY = "SELECT RESERVATION_ID, CUSTOMERS.CUSTOMER_ID, FIRST_NAME, " +
                 "LAST_NAME, EMAIL,ROOMS.ROOM_ID, ROOM_TYPE, PRICE, CHECK_IN, CHECK_OUT From RESERVATIONS " +
@@ -310,6 +266,50 @@ public class ReservationService {
             JDBCHelper.closeConnection(connection);
         }
         return reservationsAccordingToCustomerEmail;
+    }
+
+    //Retrieve available rooms based on check-in and check-out date
+    public static List<Room> findRooms(Date checkInDate, Date checkOutDate) throws SQLException {
+        List<Room> availableRooms = new ArrayList<>();
+
+        String SELECT_SQL_QUERY = "SELECT * FROM ROOMS WHERE ROOM_ID NOT IN ( SELECT ROOM_ID FROM RESERVATIONS " +
+                "WHERE (CHECK_IN <= ? AND CHECK_OUT >= ?) OR " +
+                "(CHECK_IN >= ? AND CHECK_IN <= ?) OR " +
+                "(CHECK_OUT >= ? AND CHECK_OUT <= ?))";
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = JDBCHelper.getConnection();
+            if (connection == null) {
+                System.out.println( "Error getting the connection. Please check if the DB server is running" );
+                return availableRooms;
+            }
+            stmt = connection.prepareStatement(SELECT_SQL_QUERY);
+
+            stmt.setDate(1, new java.sql.Date(checkInDate.getTime()));
+            stmt.setDate(2, new java.sql.Date(checkOutDate.getTime()));
+            stmt.setDate(3, new java.sql.Date(checkInDate.getTime()));
+            stmt.setDate(4, new java.sql.Date(checkOutDate.getTime()));
+            stmt.setDate(5, new java.sql.Date(checkInDate.getTime()));
+            stmt.setDate(6, new java.sql.Date(checkOutDate.getTime()));
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Room room = new Room();
+                room.setRoomNumber(rs.getInt("ROOM_ID"));
+                room.setRoomType(rs.getString("ROOM_TYPE"));
+                room.setPrice(rs.getDouble("PRICE"));
+                availableRooms.add(room);
+            }
+        } catch (SQLException se){
+            throw se;
+        } finally {
+            JDBCHelper.closeResultSet(rs);
+            JDBCHelper.closePreparedStatement(stmt);
+            JDBCHelper.closeConnection(connection);
+        }
+        return availableRooms;
     }
 
 }

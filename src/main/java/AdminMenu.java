@@ -1,6 +1,9 @@
-import api.AdminResource;
-import model.Room;
-import model.RoomType;
+package main.java;
+
+import main.java.api.AdminResource;
+import main.java.model.Room;
+import main.java.model.RoomType;
+
 
 import java.sql.SQLException;
 import java.util.Scanner;

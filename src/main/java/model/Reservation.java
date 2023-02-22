@@ -1,11 +1,11 @@
-package model;
+package main.java.model;
 
 import java.util.Date;
 
 public class Reservation {
     private Integer reservationId;
     private Customer customer;
-    private Room room;
+    private main.java.model.Room room;
     private Date checkInDate;
     private Date checkOutDate;
 
@@ -18,7 +18,6 @@ public class Reservation {
         this.room = room;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-
     }
 
 

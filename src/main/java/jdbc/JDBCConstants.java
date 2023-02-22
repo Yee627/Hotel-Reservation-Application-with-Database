@@ -1,4 +1,4 @@
-package jdbc;
+package main.java.jdbc;
 
 public class JDBCConstants {
 

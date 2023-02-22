@@ -1,10 +1,10 @@
-package api;
+package main.java.api;
 
-import model.Customer;
-import model.Room;
-import model.Reservation;
-import service.CustomerService;
-import service.ReservationService;
+import main.java.model.Customer;
+import main.java.model.Room;
+import main.java.model.Reservation;
+import main.java.service.CustomerService;
+import main.java.service.ReservationService;
 
 import java.sql.SQLException;
 import java.util.Date;

@@ -1,6 +1,9 @@
-import api.HotelResource;
-import model.Customer;
-import model.Room;
+package main.java;
+
+import main.java.api.HotelResource;
+import main.java.AdminMenu;
+import main.java.model.Customer;
+import main.java.model.Room;
 
 import java.sql.SQLException;
 import java.text.ParseException;

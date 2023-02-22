@@ -1,4 +1,6 @@
-package jdbc;
+package main.java.jdbc;
+
+import main.java.jdbc.JDBCConstants;
 
 import java.sql.*;
 
