@@ -37,5 +37,6 @@ The Hotel Reservation Application is built using the following technologies:
  - JavaSE
  - JDBC
  - MySQL
+ - Unit Testing
 
 
