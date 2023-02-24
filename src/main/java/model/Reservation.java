@@ -20,7 +20,6 @@ public class Reservation {
         this.checkOutDate = checkOutDate;
     }
 
-
     public Integer getReservationId() {
         return reservationId;
     }
